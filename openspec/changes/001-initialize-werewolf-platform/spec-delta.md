@@ -266,12 +266,13 @@ interface LLMModelAdapter {
 
 #### 3.3 Prompt 工程 (LLM_INTEGRATION.PROMPT)
 
-**REQ-023**: 角色特定 Prompt 模板
-- 为每个角色设计专门的系统提示词
+**REQ-023**: 角色特定 Prompt 模板（代码中管理）
+- 为每个角色设计专门的系统提示词，**在Java代码中定义为常量或类**
 - Prompt 必须包含：角色介绍、目标、策略建议、游戏状态、历史信息
 - 根据游戏阶段动态生成 Prompt（夜晚行动 vs 白天发言）
+- 实现方式：使用 PromptBuilder 类构建，模板定义在对应的角色策略类中
 
-**REQ-024**: Prompt 模板示例 - 预言家
+**REQ-024**: Prompt 模板示例 - 预言家（代码实现）
 ```
 你是狼人杀游戏中的预言家（Seer）。
 
@@ -305,6 +306,78 @@ interface LLMModelAdapter {
 
 请根据以上信息{当前任务}。
 ```
+
+**Java代码实现示例**：
+```java
+// 在 SeerStrategy.java 中定义
+public class SeerStrategy implements RoleStrategy {
+
+    private static final String SEER_NIGHT_PROMPT_TEMPLATE = """
+        你是狼人杀游戏中的预言家（Seer）。
+
+        【角色信息】
+        - 阵营：好人阵营
+        - 技能：每晚可以查验一名玩家的身份
+
+        【当前目标】
+        选择今晚要查验的玩家
+
+        【游戏状态】
+        - 当前回合：第%d回合
+        - 存活玩家：%s
+
+        【你的已知信息】
+        - 已验身份：%s
+
+        请选择一名玩家进行查验（返回玩家ID）。
+        """;
+
+    private static final String SEER_DAY_PROMPT_TEMPLATE = """
+        你是狼人杀游戏中的预言家（Seer）。
+
+        【当前目标】
+        白天发言阶段
+
+        【游戏状态】
+        - 当前回合：第%d回合
+        - 昨晚死亡：%s
+
+        【你的已知信息】
+        - 已验身份：%s
+
+        【历史发言摘要】
+        %s
+
+        【推理建议】
+        1. 谨慎透露验人信息
+        2. 分析玩家发言寻找矛盾
+        3. 保护自己身份
+
+        请生成你的发言内容（100-200字）。
+        """;
+
+    public String buildNightPrompt(GameContext context) {
+        return String.format(SEER_NIGHT_PROMPT_TEMPLATE,
+            context.getRound(),
+            context.getAlivePlayers(),
+            context.getCheckedResults());
+    }
+
+    public String buildDayPrompt(GameContext context) {
+        return String.format(SEER_DAY_PROMPT_TEMPLATE,
+            context.getRound(),
+            context.getLastNightDeaths(),
+            context.getCheckedResults(),
+            context.getSpeechSummary());
+    }
+}
+```
+
+**说明**：
+- 所有Prompt模板定义在对应的角色策略类中（`WerewolfStrategy`, `SeerStrategy`, `WitchStrategy`等）
+- 使用Java文本块（Text Blocks）定义多行模板
+- 使用 `String.format()` 动态注入游戏状态
+- PromptBuilder负责调用对应策略类获取模板并填充数据
 
 ---
 

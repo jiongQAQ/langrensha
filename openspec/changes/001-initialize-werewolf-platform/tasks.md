@@ -265,18 +265,19 @@
     - 注入记忆摘要
   - 验收: 生成的 Prompt 格式正确且信息完整
 
-- ⏳ **TASK-023**: 编写角色 Prompt 模板
-  - 规范: REQ-024 (Prompt 模板示例)
-  - 输出: Prompt 模板文件
-  - 文件: `src/main/resources/prompts/`
-    - `werewolf_night.txt` - 狼人夜晚行动
-    - `werewolf_day.txt` - 狼人白天发言
-    - `seer_night.txt` - 预言家验人
-    - `seer_day.txt` - 预言家发言
-    - `witch_night.txt` - 女巫用药
-    - `witch_day.txt` - 女巫发言
-    - `villager_day.txt` - 平民发言
-  - 验收: 模板包含所有必要变量占位符
+- ⏳ **TASK-023**: 在角色策略类中实现 Prompt 模板
+  - 规范: REQ-024 (Prompt 模板 - 代码管理)
+  - 输出: 在角色策略类中定义Prompt常量
+  - 文件: `src/main/java/com/werewolf/agent/strategy/role/`
+    - `WerewolfStrategy.java` - 包含狼人夜晚和白天Prompt模板
+    - `SeerStrategy.java` - 包含预言家夜晚和白天Prompt模板
+    - `WitchStrategy.java` - 包含女巫夜晚和白天Prompt模板
+    - `VillagerStrategy.java` - 包含平民白天Prompt模板
+  - 实现方式:
+    - 使用Java Text Blocks定义多行字符串模板
+    - 使用 `String.format()` 或占位符动态填充数据
+    - 每个角色至少包含：夜晚行动Prompt（如有）、白天发言Prompt
+  - 验收: 所有角色策略类包含完整Prompt模板定义
 
 ### 3.4 AI 策略实现
 
