@@ -1,57 +1,24 @@
-# Java
-*.class
-*.jar
-*.war
-*.ear
-target/
-*.log
-
-# Maven
-.mvn/
-mvn.cmd
-mvn
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
 
 # IDE
 .idea/
-*.iml
 .vscode/
 *.swp
 *.swo
-.DS_Store
-
-# Spring Boot
-application-local.yml
-application-dev.yml
+*~
 
 # Logs
 logs/
 *.log
 
-# Environment variables
+# Temporary files
+*.tmp
+*.temp
+
+# Environment files
 .env
 .env.local
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-
-# Node (for frontend)
-node_modules/
-dist/
-.cache/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build artifacts
-build/
-out/
-
-# Database
-*.db
-*.sqlite
-
-# OS
-.DS_Store
-Thumbs.db
+.env.*.local
