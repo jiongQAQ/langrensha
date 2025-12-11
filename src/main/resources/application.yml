@@ -1,0 +1,172 @@
+# 狼人杀多智能体平台配置文件
+
+# 服务器配置
+server:
+  port: 8021  # 使用8021端口，避免与其他Java应用冲突
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: werewolf-platform
+
+  # 数据库配置（开发环境使用H2）
+  datasource:
+    url: jdbc:h2:mem:werewolf
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # Jackson配置
+  jackson:
+    serialization:
+      indent-output: true
+    default-property-inclusion: non_null
+
+# WebSocket配置
+websocket:
+  endpoint: /ws/game
+  allowed-origins: "*"
+
+# ============================================
+# LLM模型配置（核心配置）
+# ============================================
+llm:
+  # API中转站配置（统一入口）
+  proxy:
+    enabled: true
+    base-url: ${LLM_PROXY_URL:https://api.example.com/v1}
+    api-key: ${LLM_API_KEY:your-api-key-here}
+    timeout: 30000  # 毫秒
+
+  # 重试配置
+  retry:
+    max-attempts: 3
+    initial-delay: 1000  # 毫秒
+    max-delay: 5000
+
+  # 支持的模型列表
+  models:
+    - id: qwen-max
+      name: "通义千问-Max"
+      provider: qwen
+      endpoint: ${llm.proxy.base-url}
+      api-key: ${llm.proxy.api-key}
+      enabled: true
+      parameters:
+        temperature: 0.7
+        max-tokens: 2000
+        top-p: 0.9
+
+    - id: gpt-4
+      name: "GPT-4"
+      provider: openai
+      endpoint: ${llm.proxy.base-url}
+      api-key: ${llm.proxy.api-key}
+      enabled: true
+      parameters:
+        temperature: 0.8
+        max-tokens: 2000
+        top-p: 1.0
+
+    - id: gpt-3.5-turbo
+      name: "GPT-3.5 Turbo"
+      provider: openai
+      endpoint: ${llm.proxy.base-url}
+      api-key: ${llm.proxy.api-key}
+      enabled: true
+      parameters:
+        temperature: 0.7
+        max-tokens: 1500
+
+    - id: claude-3-sonnet
+      name: "Claude 3 Sonnet"
+      provider: anthropic
+      endpoint: ${llm.proxy.base-url}
+      api-key: ${llm.proxy.api-key}
+      enabled: true
+      parameters:
+        temperature: 0.7
+        max-tokens: 2000
+
+# ============================================
+# 游戏配置
+# ============================================
+game:
+  # 超时配置（秒）
+  timeout:
+    ai-speech: 30        # AI发言生成超时
+    human-action: 60     # 人类玩家操作超时
+    night-phase: 120     # 夜晚阶段总超时
+    day-phase: 300       # 白天阶段总超时
+
+  # 房间配置
+  room:
+    max-rooms: 10                # 最大房间数
+    max-players-per-room: 6      # 每个房间最大玩家数
+    max-spectators-per-room: 10  # 每个房间最大观战者数
+
+  # 默认AI配置
+  ai:
+    default-model: qwen-max      # 默认使用的模型
+    enable-reasoning: true       # 启用推理引擎
+    memory-limit: 100            # 记忆条目数量限制
+
+# ============================================
+# 日志配置
+# ============================================
+logging:
+  level:
+    root: INFO
+    com.werewolf: DEBUG
+    com.werewolf.llm: INFO       # LLM调用日志
+    com.werewolf.agent: DEBUG     # Agent日志
+    org.springframework.web: INFO
+    org.hibernate: INFO
+  file:
+    name: logs/werewolf-platform.log
+    max-size: 10MB
+    max-history: 7
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# ============================================
+# Actuator配置
+# ============================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# ============================================
+# Swagger配置
+# ============================================
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
