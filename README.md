@@ -6,14 +6,18 @@
 
 ```
 langrensha/
+├── openspec/           # OpenSpec规范文档
+│   ├── AGENTS.md
+│   └── changes/
+│       └── 001-initialize-werewolf-platform/
 ├── project/
-│   └── backend/          # 后端服务（Spring Boot）
-│       ├── src/          # 源代码
-│       ├── openspec/     # OpenSpec规范文档
-│       ├── pom.xml       # Maven配置
-│       ├── README.md     # 后端详细文档
-│       └── .gitignore    # 后端忽略文件
-└── README.md             # 项目总览（本文件）
+│   └── backend/        # 后端服务（Spring Boot）
+│       ├── src/        # 源代码
+│       ├── pom.xml     # Maven配置
+│       ├── README.md   # 后端详细文档
+│       └── .gitignore  # 后端忽略文件
+├── README.md           # 项目总览（本文件）
+└── .gitignore          # 项目级忽略文件
 ```
 
 ## 快速开始
@@ -39,13 +43,13 @@ cd project/backend
 
 当前版本: **v0.1.0-SNAPSHOT**
 
-**Phase 1: 核心游戏引擎** (进行中 - 55.6%)
+**Phase 1: 核心游戏引擎** (进行中 - 66.7%)
 - ✅ TASK-001: 创建Maven项目结构
 - ✅ TASK-002: 配置Spring Boot开发环境
 - ✅ TASK-003: 实现角色系统
 - ✅ TASK-004: 实现游戏状态模型
 - ✅ TASK-005: 实现夜晚流程引擎
-- ⏳ TASK-006: 实现白天流程引擎
+- ✅ TASK-006: 实现白天流程引擎
 - ⏳ TASK-007: 实现胜利条件判定
 - ⏳ TASK-008: 实现游戏主控制器
 - ⏳ TASK-009: 编写核心引擎测试
@@ -53,10 +57,10 @@ cd project/backend
 ## 文档
 
 - [后端服务文档](project/backend/README.md)
-- [项目提案](project/backend/openspec/changes/001-initialize-werewolf-platform/proposal.md)
-- [详细规范](project/backend/openspec/changes/001-initialize-werewolf-platform/spec-delta.md)
-- [任务清单](project/backend/openspec/changes/001-initialize-werewolf-platform/tasks.md)
-- [配置指南](project/backend/openspec/changes/001-initialize-werewolf-platform/config-guide.md)
+- [项目提案](openspec/changes/001-initialize-werewolf-platform/proposal.md)
+- [详细规范](openspec/changes/001-initialize-werewolf-platform/spec-delta.md)
+- [任务清单](openspec/changes/001-initialize-werewolf-platform/tasks.md)
+- [配置指南](openspec/changes/001-initialize-werewolf-platform/config-guide.md)
 
 ## 游戏特性
 
